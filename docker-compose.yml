@@ -2,7 +2,7 @@ version: '3'
 
 services:
   map:
-    image: overv/openstreetmap-tile-server
+    image: mhajder/openstreetmap-tile-server-cyclosm
     volumes:
       - openstreetmap-data:/var/lib/postgresql/12/main
     ports:
