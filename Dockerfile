@@ -29,6 +29,8 @@ RUN apt-get install -y --no-install-recommends \
   bzip2 \
   cmake \
   cron \
+  fonts-dejavu-core \
+  fonts-hanazono \
   fonts-noto-cjk \
   fonts-noto-hinted \
   fonts-noto-unhinted \
