@@ -1,6 +1,8 @@
-# openstreetmap-tile-server
+# openstreetmap-tile-server-cyclosm
 
-[![Build Status](https://travis-ci.org/Overv/openstreetmap-tile-server.svg?branch=master)](https://travis-ci.org/Overv/openstreetmap-tile-server) [![](https://images.microbadger.com/badges/image/overv/openstreetmap-tile-server.svg)](https://microbadger.com/images/overv/openstreetmap-tile-server "openstreetmap-tile-server")
+## Forked from [Overv/openstreetmap-tile-server](https://github.com/Overv/openstreetmap-tile-server)
+
+[![Build Status](https://github.com/mhajder/openstreetmap-tile-server-cyclosm/workflows/Docker/badge.svg)](https://github.com/mhajder/openstreetmap-tile-server-cyclosm/actions?query=workflow%3ADocker) [![](https://images.microbadger.com/badges/image/mhajder/openstreetmap-tile-server-cyclosm.svg)](https://microbadger.com/images/mhajder/openstreetmap-tile-server-cyclosm "openstreetmap-tile-server-cyclosm")
 
 This container allows you to easily set up an OpenStreetMap PNG tile server given a `.osm.pbf` file. It is based on the [latest Ubuntu 18.04 LTS guide](https://switch2osm.org/manually-building-a-tile-server-18-04-lts/) from [switch2osm.org](https://switch2osm.org/) and therefore uses the default OpenStreetMap style.
 
@@ -8,15 +10,15 @@ This container allows you to easily set up an OpenStreetMap PNG tile server give
 
 First create a Docker volume to hold the PostgreSQL database that will contain the OpenStreetMap data:
 
-    docker volume create openstreetmap-data
+    docker volume create openstreetmap-cyclosm-data
 
 Next, download an .osm.pbf extract from geofabrik.de for the region that you're interested in. You can then start importing it into PostgreSQL by running a container and mounting the file as `/data.osm.pbf`. For example:
 
 ```
 docker run \
     -v /absolute/path/to/luxembourg.osm.pbf:/data.osm.pbf \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    mhajder/openstreetmap-tile-server-cyclosm \
     import
 ```
 
@@ -28,11 +30,12 @@ If your import is an extract of the planet and has polygonal bounds associated w
 
 ```
 docker run \
+    --rm \
     -e UPDATES=enabled \
     -v /absolute/path/to/luxembourg.osm.pbf:/data.osm.pbf \
     -v /absolute/path/to/luxembourg.poly:/data.poly \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    mhajder/openstreetmap-tile-server-cyclosm \
     import
 ```
 
@@ -44,10 +47,11 @@ It is also possible to let the container download files for you rather than moun
 
 ```
 docker run \
+    --rm \
     -e DOWNLOAD_PBF=https://download.geofabrik.de/europe/luxembourg-latest.osm.pbf \
     -e DOWNLOAD_POLY=https://download.geofabrik.de/europe/luxembourg.poly \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    mhajder/openstreetmap-tile-server-cyclosm \
     import
 ```
 
@@ -58,12 +62,12 @@ Run the server like this:
 ```
 docker run \
     -p 8080:80 \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 
-Your tiles will now be available at `http://localhost:8080/tile/{z}/{x}/{y}.png`. The demo map in `leaflet-demo.html` will then be available on `http://localhost:8080`. Note that it will initially take quite a bit of time to render the larger tiles for the first time.
+Your tiles will now be available at `http://localhost:8080/tile/{z}/{x}/{y}.png`.
 
 ### Using Docker Compose
 
@@ -74,16 +78,16 @@ The `docker-compose.yml` file included with this repository shows how the aforem
 Tiles that have already been rendered will be stored in `/var/lib/mod_tile`. To make sure that this data survives container restarts, you should create another volume for it:
 
 ```
-docker volume create openstreetmap-rendered-tiles
+docker volume create openstreetmap-cyclosm-rendered-tiles
 docker run \
     -p 8080:80 \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -v openstreetmap-rendered-tiles:/var/lib/mod_tile \
-    -d overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    -v openstreetmap-cyclosm-rendered-tiles:/var/lib/mod_tile \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 
-**If you do this, then make sure to also run the import with the `openstreetmap-rendered-tiles` volume to make sure that caching works properly across updates!**
+**If you do this, then make sure to also run the import with the `openstreetmap-cyclosm-rendered-tiles` volume to make sure that caching works properly across updates!**
 
 ### Enabling automatic updating (optional)
 
@@ -93,9 +97,9 @@ Given that you've set up your import as described in the *Automatic updates* sec
 docker run \
     -p 8080:80 \
     -e UPDATES=enabled \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -v openstreetmap-rendered-tiles:/var/lib/mod_tile \
-    -d overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    -v openstreetmap-cyclosm-rendered-tiles:/var/lib/mod_tile \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 
@@ -108,9 +112,9 @@ To enable the `Access-Control-Allow-Origin` header to be able to retrieve tiles 
 ```
 docker run \
     -p 8080:80 \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
     -e ALLOW_CORS=enabled \
-    -d overv/openstreetmap-tile-server \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 
@@ -122,8 +126,8 @@ To connect to the PostgreSQL database inside the container, make sure to expose 
 docker run \
     -p 8080:80 \
     -p 5432:5432 \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 
@@ -140,8 +144,8 @@ docker run \
     -p 8080:80 \
     -p 5432:5432 \
     -e PGPASSWORD=secret \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 
@@ -156,8 +160,8 @@ The import and tile serving processes use 4 threads by default, but this number 
 docker run \
     -p 8080:80 \
     -e THREADS=24 \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 
@@ -168,8 +172,8 @@ The import and tile serving processes use 800 MB RAM cache by default, but this 
 docker run \
     -p 8080:80 \
     -e "OSM2PGSQL_EXTRA_ARGS=-C 4096" \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 
@@ -180,8 +184,8 @@ The database use the autovacuum feature by default. This behavior can be changed
 docker run \
     -p 8080:80 \
     -e AUTOVACUUM=off \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 
@@ -192,10 +196,10 @@ If you are planning to import the entire planet or you are running into memory e
 ```
 docker run \
     -v /absolute/path/to/luxembourg.osm.pbf:/data.osm.pbf \
-    -v openstreetmap-nodes:/nodes \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
+    -v openstreetmap-cyclosm-nodes:/nodes \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
     -e "OSM2PGSQL_EXTRA_ARGS=--flat-nodes /nodes/flat_nodes.bin" \
-    overv/openstreetmap-tile-server \
+    mhajder/openstreetmap-tile-server-cyclosm \
     import
 ```
 
@@ -218,9 +222,9 @@ To raise it use `--shm-size` parameter. For example:
 ```
 docker run \
     -p 8080:80 \
-    -v openstreetmap-data:/var/lib/postgresql/12/main \
+    -v openstreetmap-cyclosm-data:/var/lib/postgresql/12/main \
     --shm-size="192m" \
-    -d overv/openstreetmap-tile-server \
+    -d mhajder/openstreetmap-tile-server-cyclosm \
     run
 ```
 For too high values you may notice excessive CPU load and memory usage. It might be that you will have to experimentally find the best values for yourself.
