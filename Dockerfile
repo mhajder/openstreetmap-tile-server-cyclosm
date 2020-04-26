@@ -123,6 +123,14 @@ RUN mkdir -p /home/renderer/src \
  && ldconfig \
  && cd ..
 
+# Configure Noto Emoji font
+RUN mkdir -p /home/renderer/src \
+&& cd /home/renderer/src \
+&& git clone https://github.com/googlei18n/noto-emoji.git \
+&& cp noto-emoji/fonts/NotoColorEmoji.ttf /usr/share/fonts/truetype/noto \
+&& cp noto-emoji/fonts/NotoEmoji-Regular.ttf /usr/share/fonts/truetype/noto \
+&& rm -rf noto-emoji
+
 # Configure stylesheet
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
