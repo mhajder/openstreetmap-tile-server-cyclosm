@@ -14,6 +14,9 @@ CREATE INDEX planet_osm_roads_roads_ref
 CREATE INDEX planet_osm_roads_admin_low
   ON planet_osm_roads USING GIST (way)
   WHERE boundary = 'administrative' AND admin_level IN ('0', '1', '2', '3', '4');
+CREATE INDEX planet_osm_bicycle_routes 
+  ON planet_osm_line USING GIST (way) 
+  WHERE route = 'bicycle' OR route = 'mtb';
 CREATE INDEX planet_osm_line_ferry
   ON planet_osm_line USING GIST (way)
   WHERE route = 'ferry';
