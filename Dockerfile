@@ -174,7 +174,7 @@ RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
  && git clone https://github.com/zverik/regional \
  && cd regional \
- && git checkout 612fe3e040d8bb70d2ab3b133f3b2cfc6c940520 \
+ && git checkout 88adee031f19b2d5fb093f9e21327074d11e5dab \
  && rm -rf .git \
  && chmod u+x /home/renderer/src/regional/trim_osc.py
 
