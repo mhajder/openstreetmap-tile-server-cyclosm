@@ -135,7 +135,7 @@ RUN mkdir -p /home/renderer/src \
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
  && git clone https://github.com/cyclosm/cyclosm-cartocss-style.git \
- && git -C cyclosm-cartocss-style checkout a26e508e25ee44fc741739f234f721509f0fc8e9 \
+ && git -C cyclosm-cartocss-style checkout ee87cce72847944c67e89efc15ba596654a051d1 \
  && cd cyclosm-cartocss-style \
  && rm -rf .git \
  && npm install -g carto@0.18.2 \
