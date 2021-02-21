@@ -81,7 +81,7 @@ RUN apt-get install -y --no-install-recommends \
 && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 # Set up PostGIS
-RUN wget https://download.osgeo.org/postgis/source/postgis-3.0.1.tar.gz -O postgis.tar.gz \
+RUN wget https://download.osgeo.org/postgis/source/postgis-3.1.1.tar.gz -O postgis.tar.gz \
  && mkdir -p postgis_src \
  && tar -xvzf postgis.tar.gz --strip 1 -C postgis_src \
  && rm postgis.tar.gz \
@@ -192,7 +192,7 @@ RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
  && git clone https://github.com/zverik/regional \
  && cd regional \
- && git checkout 88adee031f19b2d5fb093f9e21327074d11e5dab \
+ && git checkout 889d630a1e1a1bacabdd1dad6e17b49e7d58cd4b \
  && rm -rf .git \
  && chmod u+x /home/renderer/src/regional/trim_osc.py
 
