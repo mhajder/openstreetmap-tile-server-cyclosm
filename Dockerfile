@@ -127,6 +127,7 @@ RUN mkdir -p /home/renderer/src \
 RUN mkdir -p /home/renderer/src \
 && cd /home/renderer/src \
 && git clone https://github.com/googlei18n/noto-emoji.git \
+&& git -C noto-emoji checkout e0aa9412575fc39384efd39f90c4390d66bdd18f \
 && cp noto-emoji/fonts/NotoColorEmoji.ttf /usr/share/fonts/truetype/noto \
 && cp noto-emoji/fonts/NotoEmoji-Regular.ttf /usr/share/fonts/truetype/noto \
 && rm -rf noto-emoji
@@ -135,8 +136,9 @@ RUN mkdir -p /home/renderer/src \
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
  && git clone https://github.com/cyclosm/cyclosm-cartocss-style.git \
- && git -C cyclosm-cartocss-style checkout 4350a4635cab7df5e46007052babe3390c2fa51b \
+ && git -C cyclosm-cartocss-style checkout e6f051f639ab1198c1a14e941cc0dd8a05d14d3b \
  && cd cyclosm-cartocss-style \
+ && cp views.sql / \
  && rm -rf .git \
  && npm install -g carto@0.18.2 \
  && mkdir data \

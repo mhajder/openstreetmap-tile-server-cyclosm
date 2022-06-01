@@ -78,6 +78,13 @@ if [ "$1" = "import" ]; then
     # Create indexes
     sudo -u postgres psql -d gis -f indexes.sql
 
+    # Import CyclOSM views
+    sudo -u postgres psql -d gis -f views.sql
+    sudo -u postgres psql -d gis -c "ALTER VIEW cyclosm_ways OWNER TO renderer;"
+    sudo -u postgres psql -d gis -c "ALTER VIEW cyclosm_amenities_point OWNER TO renderer;"
+    sudo -u postgres psql -d gis -c "ALTER VIEW cyclosm_amenities_poly OWNER TO renderer;"
+    sudo -u postgres psql -d gis -c "ALTER VIEW cyclosm_ways OWNER TO renderer;"
+
     # Register that data has changed for mod_tile caching purposes
     touch /var/lib/mod_tile/planet-import-complete
 
